@@ -50,7 +50,7 @@ class Socket {
   //
   // For IE8 support use an ES5-shim (https://github.com/es-shims/es5-shim)
   //
-  constructor(endPoint, opts = {}){
+  constructor(endPoint, opts = {}, origin){
     this.stateChangeCallbacks = {open: [], close: [], error: [], message: []}
     this.channels             = []
     this.sendBuffer           = []
@@ -76,6 +76,7 @@ class Socket {
     this.reconnectTimer       = new Timer(() => {
       this.disconnect(() => this.connect())
     }, this.reconnectAfterMs)
+    this.origin = origin
   }
 
   endPointURL(){
@@ -101,7 +102,7 @@ class Socket {
   connect(){
     if(this.conn){ return }
 
-    this.conn = new this.transport(this.endPointURL())
+    this.conn = new this.transport(this.endPointURL(), null, this.origin)
     this.conn.timeout   = this.longpollerTimeout
     this.conn.onopen    = () => this.onConnOpen()
     this.conn.onerror   = error => this.onConnError(error)
