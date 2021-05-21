@@ -90,6 +90,18 @@ class Socket {
     return `${url}${prefix}${querystring.stringify(params)}`
   }
 
+  kill(callback) {
+    if(this.conn){
+      this.conn.onclose = function(){}; // noop
+      this.conn.close();
+      this.conn = null;
+    }
+    this.reconnectTimer.reset();
+    this.reconnectTimer = null;
+    clearInterval(this.heartbeatTimer);
+    callback && callback();
+  }
+
   disconnect(callback, code, reason){
     if(this.conn){
       this.conn.onclose = function(){} // noop
