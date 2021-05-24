@@ -99,6 +99,7 @@ class Socket {
     this.reconnectTimer.reset();
     this.reconnectTimer = null;
     clearInterval(this.heartbeatTimer);
+    this.channels.forEach(c => c.kill());
     callback && callback();
   }
 

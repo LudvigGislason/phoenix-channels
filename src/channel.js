@@ -44,6 +44,12 @@ class Channel {
     })
   }
 
+  kill() {
+    this.rejoinTimer.reset();
+    this.rejoinTimer = null;
+    this.socket = null;
+  }
+
   rejoinUntilConnected(){
     this.rejoinTimer.scheduleTimeout()
     if(this.socket.isConnected()){
